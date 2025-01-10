@@ -19,6 +19,8 @@ While the functions are set to run on their own, users have the option to tune t
 1) Caret's trainControl object can be included by the user should they want to define different paramaters than the function-defined default (i.e. folds, repeats, method, etc.)
 2) The metric used by the train function, as well as whether to maximize or minimize, are definable.
    a) **NOTE:** Caret's twoClassSummary and multiClassSummary are used here, and so the selected metrics must align with either of these
+3) All functions are capable of running on either a single thread or in parallel. Should parallel processing be desired, the user is responsible for establishing their own parallel back-end
+   a) For an example of establishing a parallel back-end see [doFutures from Tidyverse](https://dofuture.futureverse.org/) for more information
 
 # Function outputs
 All functions will output their generated model and confusion matrix objects for further assessment. Additionally, all (except the ML_suite and ensemble functions) will print performance statistics for each combination tested as the function runs so users can view them in real-time.
