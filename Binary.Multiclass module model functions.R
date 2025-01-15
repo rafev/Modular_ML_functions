@@ -3,8 +3,10 @@
 ## --------------
 
 GLMNET_mod.search_binary = function(modlist, covariate_interest = NULL, train_grp, train_pheno, valid_grp, valid_pheno, module_df, trControl=NULL, metric = "ROC", maximize=T) {
+
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -13,6 +15,13 @@ GLMNET_mod.search_binary = function(modlist, covariate_interest = NULL, train_gr
     width = 150,
     complete = "=")
   )
+  
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
   
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
@@ -72,8 +81,10 @@ GLMNET_mod.search_binary = function(modlist, covariate_interest = NULL, train_gr
 
 
 GLMNET_mod.search_multiclass = function(modlist, covariate_interest = NULL, train_grp, train_pheno, valid_grp, valid_pheno, module_df, trControl=NULL, type.multinomial = "grouped", metric = "Mean_Balanced_Accuracy", maximize=T) {
+
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -82,6 +93,14 @@ GLMNET_mod.search_multiclass = function(modlist, covariate_interest = NULL, trai
     width = 150,
     complete = "=")
   )
+  
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
+  
   
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
@@ -148,8 +167,10 @@ GLMNET_mod.search_multiclass = function(modlist, covariate_interest = NULL, trai
 # SVM_Linear model function (binary/multiclass)
 ## --------------
 SVM.L_mod.search = function(modlist, covariate_interest = NULL, train_grp, train_pheno, valid_grp, valid_pheno, module_df, trControl=NULL, metric=NULL, maximize=NULL, seq_length=40) {
+
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -158,6 +179,13 @@ SVM.L_mod.search = function(modlist, covariate_interest = NULL, train_grp, train
     width = 150,
     complete = "=")
   )
+  
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
   
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
@@ -249,8 +277,10 @@ SVM.L_mod.search = function(modlist, covariate_interest = NULL, train_grp, train
 ## --------------
 
 RF_mod.search = function(modlist, covariate_interest = NULL, train_grp, train_pheno, valid_grp, valid_pheno, module_df, trControl=NULL, tuneLength=20, metric=NULL, maximize=NULL) {
+
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -260,6 +290,13 @@ RF_mod.search = function(modlist, covariate_interest = NULL, train_grp, train_ph
     complete = "=")
   )
   
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
+    
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
                              savePredictions = "final",
@@ -349,6 +386,7 @@ Generic_mod.search_binary = function(model_method = NULL, modlist, covariate_int
                                      train_grp, train_pheno, valid_grp, valid_pheno, module_df, metric = NULL, maximize = NULL) {
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -358,6 +396,13 @@ Generic_mod.search_binary = function(model_method = NULL, modlist, covariate_int
     complete = "=")
   )
   
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
+    
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
                              savePredictions = "final",
@@ -453,11 +498,12 @@ Generic_mod.search_binary = function(model_method = NULL, modlist, covariate_int
 ## --------------
 
 ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, trControl, 
-                         train_grp, train_pheno, valid_grp, valid_pheno,
+                         train_grp, train_pheno, valid_grp, valid_pheno, module_df,
                          tuneLength=20, metric = NULL, maximize = NULL,
                          family = "binomial") {
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -466,6 +512,13 @@ ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, tr
     width = 150,
     complete = "=")
   )
+  
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
   
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
@@ -493,7 +546,7 @@ ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, tr
     cat("No response variable selected!!\n")
     stop()
   }
-  
+  res_out_all = list()
   for (i in modules_final) {
     cat("\nWorking on module:", i,"\n")
     
@@ -517,7 +570,7 @@ ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, tr
     fit.rf <- train(x = train_grp[, module_df[module_df$colors %in% strsplit(i, "_")[[1]], 1]],
                            y = train_pheno[[covariate_interest]],
                            metric = metric,
-                           tuneLength = 20,
+                           tuneLength = tuneLength,
                            maximize = maximize,
                            method = "rf", trControl = trControl)
     
@@ -576,7 +629,7 @@ ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, tr
                         data = train_grp.B_SVM.DF[,2:ncol(train_grp.B_SVM.DF)],
                         method="svmRadial", trControl= trControl,
                         metric = metric, maximize = maximize,
-                        tuneLength = 20)
+                        tuneLength = tuneLength)
     
     
     # Colate models into single object
@@ -609,8 +662,7 @@ ML_suite_scan = function(modules_final, covariate_interest = NULL, id_column, tr
     }, simplify = F, USE.NAMES = T)
     
     
-    res_out_all[[i]] = list(ML_models = ML_models,
-                            ML.Bal.Acc_validation = ML.Bal.Acc_validation)
+    res_out_all[[i]] = list(ML_models = ML_models, ML.Bal.Acc_validation = ML.Bal.Acc_validation)
                        
   }
   return(res_out_all)
@@ -629,6 +681,7 @@ ENSEMBLE_ML_suite_scan = function(Ensemble_models_list, covariate_interest = NUL
                                   family = "binomial") {
   require(caret)
   require(progressr)
+  require(data.table)
   
   #Set up progress bar
   handlers(global = TRUE)
@@ -638,6 +691,13 @@ ENSEMBLE_ML_suite_scan = function(Ensemble_models_list, covariate_interest = NUL
     complete = "=")
   )
   
+  if(!is.data.table(train_pheno)){
+  	train_pheno = as.data.table(train_pheno)
+  }
+  if(!is.data.table(valid_pheno)){
+  	valid_pheno = as.data.table(valid_pheno)
+  }
+    
   if(is.null(trControl)){
     trControl = trainControl(method = "repeatedcv",
                              savePredictions = "final",
@@ -677,7 +737,7 @@ ENSEMBLE_ML_suite_scan = function(Ensemble_models_list, covariate_interest = NUL
   set.seed(32)
   fit.rf <- caretEnsemble::caretStack(Ensemble_models_list,
                                       metric = metric, maximize = maximize,
-                                      tuneLength = 20,
+                                      tuneLength = tuneLength,
                                       method = "rf", trControl = trControl)
   
   # C5.0
@@ -726,7 +786,7 @@ ENSEMBLE_ML_suite_scan = function(Ensemble_models_list, covariate_interest = NUL
   fit.svmRad <- caretEnsemble::caretStack(Ensemble_models_list,
                                           metric = metric, maximize = maximize,
                                           method="svmRadial", trControl= trControl,
-                                          tuneLength = 20)
+                                          tuneLength = tuneLength)
   
   
   # Colate models into single object
